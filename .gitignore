@@ -7,3 +7,5 @@ data/Indian cities data csv utf-8.csv
 data_collection.log
 About.txt
 Proofs
+.idea
+__pycache__
