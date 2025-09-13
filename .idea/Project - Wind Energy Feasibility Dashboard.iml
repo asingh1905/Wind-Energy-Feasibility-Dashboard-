@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="PYTHON_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/Proofs" />
+      <excludeFolder url="file://$MODULE_DIR$/data/raw" />
+      <excludeFolder url="file://$MODULE_DIR$/data/simplemaps_worldcities_basicv1.901" />
+    </content>
+    <orderEntry type="jdk" jdkName="Project_-_Wind_Energy_Feasibility_Dashboard" jdkType="Python SDK" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+  <component name="PyDocumentationSettings">
+    <option name="format" value="PLAIN" />
+    <option name="myDocStringFormat" value="Plain" />
+  </component>
+</module>
