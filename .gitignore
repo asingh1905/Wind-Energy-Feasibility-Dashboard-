@@ -8,3 +8,4 @@ data_collection.log
 About.txt
 Proofs
 .idea
+__pycache__
