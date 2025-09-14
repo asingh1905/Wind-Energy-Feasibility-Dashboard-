@@ -15,11 +15,26 @@ years_available = sorted(df["date"].dt.year.unique())
 # set page
 st.set_page_config(page_title="Wind Energy ", layout="wide")
 
+def get_lat_long(city_name: str, df: pd.DataFrame):
+    city_coords = df.loc[df["location"] == city_name, ["latitude", "longitude"]].dropna()
+    if not city_coords.empty:
+        lat = city_coords.iloc[0]["latitude"]
+        lon = city_coords.iloc[0]["longitude"]
+        return lat, lon
+    else:
+        return None, None
+
+# setting required values to NONE
+selected_speed = None
+selected_speed_type = None
 # Sidebar (Left Nav)
 with st.sidebar:
     st.title("Select Parameters")
     selected_city = st.selectbox("City", cities, index=None, placeholder="Select City")
-    selected_speed = st.selectbox("Wind Speed At", ["10m", "50m"], index=None, placeholder="Select Wind Speed")
+    datatype = st.selectbox("Data type",["Wind Speed"],index=None, placeholder="Select Data Type")
+    if datatype == "Wind Speed":
+        selected_speed = st.radio("Wind Speed At:", ["2m", "10m", "50m"], index=None, horizontal=True)
+        selected_speed_type = st.radio("Wind Speed Type:", ["Avg", "Max", "Min"], index=0, horizontal=True).lower()
 
     filter_mode = st.selectbox("Time filter", ["All", "Specific year", "Custom"], index=None, placeholder="Select Filter")
     selected_year, custom_range = None, None
@@ -31,7 +46,8 @@ with st.sidebar:
 
 # Main Page
 st.title("Wind Energy Feasibility Dashboard")
-st.write("A Data-Driven Approach to Site Selection.")
+st.markdown('<p style="font-size:24px;">A Data-Driven Approach to Site Selection.</p>', unsafe_allow_html=True)
+st.markdown("---")
 
 today = df["date"].max().date()
 start, end = df["date"].min().date(), today
@@ -41,9 +57,13 @@ elif filter_mode == "Custom" and isinstance(custom_range, (list, tuple)) and len
     start, end = custom_range if custom_range[0] <= custom_range[1] else (custom_range[1], custom_range[0])
 
 if selected_speed is not None:
-    col = "wind_speed_10m" if selected_speed == "10m" else "wind_speed_50m"
+    if selected_speed_type == "avg":
+        col = f"wind_speed_{selected_speed}"
+    else:
+        col = f"wind_speed_{selected_speed}_{selected_speed_type}"
 else:
     col = None
+
 
 if selected_city is not None and selected_speed is not None and col is not None and filter_mode is not None:
     mask = (
@@ -57,12 +77,27 @@ if selected_city is not None and selected_speed is not None and col is not None 
         .rename(columns={col: f"Wind ({selected_speed})"})
         .sort_index()
     )
-
-    st.subheader("Historical Wind")
+    latitude, longitude = get_lat_long(selected_city, data)
+    st.subheader(f"Historical Wind Data of {selected_city} ({latitude},{longitude})")
     if city_df.empty:
         st.warning("No data for the selected city and time range.")
     else:
+        st.write(f"{(selected_speed_type).capitalize()} Wind Speed")
         st.line_chart(city_df)
         st.caption(f"{selected_city} • {start} → {end}")
+        if selected_speed is not "2m":
+            dir_col = f"wind_direction_{selected_speed}"
+            direction_df = (
+                df.loc[mask, ["date", dir_col]]
+                .set_index("date")
+                .rename(columns={col: f"Wind Direction ({selected_speed})"})
+                .sort_index())
+            st.write("Avg Wind Direction")
+            st.line_chart(direction_df)
+        else:
+            st.warning("Direction Data not available for 2m height")
+
+
+    st.info("Last Updated on 01/09/2025")
 else:
     st.info("Select all the fields to view historical data.")
