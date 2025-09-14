@@ -3,7 +3,6 @@ data/analysis
 Proofs
 .idea
 __pycache__
-not required
 data_collection.log
 comprehensive_wind_data_collector.py
 requirements.txt
@@ -12,3 +11,4 @@ test_nasa_api.py
 test
 .gitignore
 data/processed/city_wise
+not required
