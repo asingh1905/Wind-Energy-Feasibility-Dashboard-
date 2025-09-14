@@ -1,11 +1,14 @@
-test.py
-streamlit_test2.py
-app_starter.py
 data/raw
-data/simplemaps_worldcities_basicv1.901
-data/Indian cities data csv utf-8.csv
-data_collection.log
-About.txt
+data/analysis
 Proofs
 .idea
 __pycache__
+not required
+data_collection.log
+comprehensive_wind_data_collector.py
+requirements.txt
+run_wind_data_collection.py
+test_nasa_api.py
+test
+.gitignore
+data/processed/city_wise

@@ -3,12 +3,12 @@ import pandas as pd
 from datetime import datetime
 
 # import cities data
-data = pd.read_csv("data/processed/all_cities_INDIA cleaned.csv")
+data = pd.read_csv("data/processed/comprehensive_wind_data_all_cities_2014_2024.csv")
 data["date"] = pd.to_datetime(data["date"], errors="coerce", dayfirst=True)
 data = data.dropna(subset=["date"])
-cities = data.city.dropna().unique()
+cities = data.location.dropna().unique()
 
-df = data.sort_values(["city", "date"]).copy()
+df = data.sort_values(["location", "date"]).copy()
 years_available = sorted(df["date"].dt.year.unique())
 
 
@@ -41,13 +41,13 @@ elif filter_mode == "Custom" and isinstance(custom_range, (list, tuple)) and len
     start, end = custom_range if custom_range[0] <= custom_range[1] else (custom_range[1], custom_range[0])
 
 if selected_speed is not None:
-    col = "ws10" if selected_speed == "10m" else "ws50"
+    col = "wind_speed_10m" if selected_speed == "10m" else "wind_speed_50m"
 else:
     col = None
 
 if selected_city is not None and selected_speed is not None and col is not None and filter_mode is not None:
     mask = (
-        (df["city"] == selected_city) &
+        (df["location"] == selected_city) &
         (df["date"].dt.date >= start) &
         (df["date"].dt.date <= end)
     )
