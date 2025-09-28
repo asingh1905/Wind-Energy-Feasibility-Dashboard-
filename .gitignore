@@ -12,3 +12,6 @@ test
 .gitignore
 data/processed/city_wise
 not required
+data/extra files
+data/complete csv data
+nasa_power_ultra_fast.py
