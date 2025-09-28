@@ -4,22 +4,26 @@ import streamlit as st
 from typing import Dict, List, Optional, Tuple
 import os
 from datetime import datetime, timedelta
-
 @st.cache_data(ttl=3600)
-def load_wind_data(file_path: str = "data/selected_cities/selected_cities.csv") -> pd.DataFrame:
+def load_wind_data(file_path: str = "data/selected_cities/selected_cities_complete_wind_data.csv") -> pd.DataFrame:
     """Load and preprocess wind data with caching."""
     try:
         df = pd.read_csv(file_path)
-        # Add date column if missing for basic functionality
+        
+        # Handle column name variations
+        if 'name' in df.columns and 'location' not in df.columns:
+            df['location'] = df['name']
+            
         if 'date' not in df.columns:
-            # Create dummy date for testing
             df['date'] = pd.date_range('2014-01-01', periods=len(df), freq='D')
+            
         df['date'] = pd.to_datetime(df['date'], errors='coerce')
-        df = df.sort_values(['name', 'date']).reset_index(drop=True) # Use 'name' instead of 'location'
+        df = df.sort_values(['location', 'date']).reset_index(drop=True)
         return df
     except Exception as e:
         st.error(f"Error loading data: {e}")
         return pd.DataFrame()
+
 
 def get_location_list(df: pd.DataFrame) -> List[str]:
     """Get unique locations from dataset."""
