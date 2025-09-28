@@ -31,15 +31,12 @@ st.markdown("""
     .main-header {
         font-size: 3.5rem;
         font-weight: 700;
-        background: linear-gradient(45deg, #1f77b4, #ff7f0e);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
         text-align: center;
         margin-bottom: 1rem;
     }
     
     .subtitle {
-        font-size: 1.5rem;
+        font-size: 1rem;
         color: #666;
         text-align: center;
         margin-bottom: 2rem;
