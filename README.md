@@ -111,6 +111,3 @@ Contributions are welcome. To contribute:
 4. Push to your branch (`git push origin feature-name`)  
 5. Open a pull request describing your changes
 
-## License
-
-This project is released under the MIT License. See `LICENSE` for details.
