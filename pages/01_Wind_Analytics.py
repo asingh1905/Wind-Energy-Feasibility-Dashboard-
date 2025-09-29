@@ -374,7 +374,7 @@ if not selected_cities:
 # Prepare column names
 speed_col = f"wind_speed_{selected_height}"
 if selected_speed_type != "Average":
-    speed_col += f"_{selected_speed_type.lower()}"
+    speed_col += f"_{str(selected_speed_type)[0:3].lower()}"
 
 direction_col = f"wind_direction_{selected_height}"
 power_density_col = f"wind_power_density_{selected_height}"
