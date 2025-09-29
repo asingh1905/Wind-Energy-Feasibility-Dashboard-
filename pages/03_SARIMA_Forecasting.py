@@ -361,7 +361,7 @@ st.markdown("### Advanced Time Series Forecasting for Wind Resources")
 # Status information
 st.markdown(f"""
 <div class="status-card">
-    <h4>🎯 Synthetic SARIMA Forecasting Ready</h4>
+    <h4> Synthetic SARIMA Forecasting Ready</h4>
     <p><strong>{len(cities)} cities</strong> and <strong>{len(wind_params)} wind parameters</strong> available for forecasting</p>
     <p>Using advanced statistical modeling with seasonal patterns</p>
 </div>
@@ -434,7 +434,7 @@ with st.sidebar:
                             if forecast_data:
                                 st.session_state.current_model = forecast_data
                                 st.session_state.forecast_generated = True
-                                st.success("✅ Forecast generated successfully!")
+                                st.success("Forecast generated successfully!")
                             else:
                                 st.error("Failed to generate forecast")
                     else:
@@ -460,7 +460,7 @@ if st.session_state.get('forecast_generated', False) and st.session_state.curren
     # Forecast information
     st.markdown(f"""
     <div class="forecast-date-info">
-        <h4>📈 Forecast Generated Successfully</h4>
+        <h4> Forecast Generated Successfully</h4>
         <p><strong>Location:</strong> {forecast_data['city']}</p>
         <p><strong>Parameter:</strong> {forecast_data['parameter'].replace('_', ' ').title()}</p>
         <p><strong>Forecast Period:</strong> {forecast_data['forecast_start_date']} to {forecast_data['forecast_end_date']}</p>
@@ -471,7 +471,7 @@ if st.session_state.get('forecast_generated', False) and st.session_state.curren
     """, unsafe_allow_html=True)
     
     # Performance metrics
-    st.subheader("📊 Model Performance")
+    st.subheader("Model Performance")
     
     col1, col2, col3, col4, col5 = st.columns(5)
     
@@ -517,7 +517,7 @@ if st.session_state.get('forecast_generated', False) and st.session_state.curren
         """, unsafe_allow_html=True)
     
     # Forecast visualization
-    st.subheader("🎯 Wind Speed Forecast")
+    st.subheader("Wind Speed Forecast")
     
     forecast_fig = create_forecast_visualization(historical_data, forecast_data, show_historical_days)
     if forecast_fig.data:
@@ -527,7 +527,7 @@ if st.session_state.get('forecast_generated', False) and st.session_state.curren
     
     # Statistics
     if show_statistics:
-        st.subheader("📈 Forecast Statistics")
+        st.subheader("Forecast Statistics")
         
         forecast_values = np.array(forecast_data['forecast_values'])
         lower_ci = np.array(forecast_data['confidence_intervals']['lower'])
@@ -548,7 +548,7 @@ if st.session_state.get('forecast_generated', False) and st.session_state.curren
             st.metric("Avg Uncertainty", f"{uncertainty:.2f} m/s")
         
         # Weekly breakdown - use safe date operations
-        st.subheader("📅 Weekly Forecast Breakdown")
+        st.subheader("Weekly Forecast Breakdown")
         
         try:
             forecast_df = pd.DataFrame({
@@ -576,12 +576,12 @@ if st.session_state.get('forecast_generated', False) and st.session_state.curren
             st.info("Weekly breakdown temporarily unavailable due to date processing.")
     
     # Export functionality
-    st.subheader("💾 Export Data")
+    st.subheader("Export Data")
     
     col1, col2 = st.columns(2)
     
     with col1:
-        st.write("**📊 Export Forecast Data**")
+        st.write("**Export Forecast Data**")
         
         # Forecast data export
         export_df = pd.DataFrame({
@@ -600,7 +600,7 @@ if st.session_state.get('forecast_generated', False) and st.session_state.curren
         )
     
     with col2:
-        st.write("**📋 Export Model Summary**")
+        st.write("**Export Model Summary**")
         
         # Model summary export
         summary_data = pd.DataFrame([{
@@ -624,7 +624,7 @@ if st.session_state.get('forecast_generated', False) and st.session_state.curren
         
         summary_csv = summary_data.to_csv(index=False)
         st.download_button(
-            "📄 Download Summary CSV",
+            "Download Summary CSV",
             summary_csv,
             file_name=f"summary_{selected_city.replace(' ', '_')}_{selected_param}_{datetime.now().strftime('%Y%m%d')}.csv",
             mime="text/csv"
@@ -638,20 +638,20 @@ else:
     
     with col1:
         st.markdown(f"""
-        ### 📋 How to Generate Wind Forecasts:
+        ### How to Generate Wind Forecasts:
         
-        1. **📍 Select Location**: Choose from {len(cities)} available cities
-        2. **⚙️ Select Parameter**: Choose from {len(wind_params)} wind parameters
-        3. **📅 Configure Forecast**: Set period (7-90 days) and display options
-        4. **🎯 Generate**: Click "Generate Forecast" to create predictions
+        1. **Select Location**: Choose from {len(cities)} available cities
+        2. **Select Parameter**: Choose from {len(wind_params)} wind parameters
+        3. **Configure Forecast**: Set period (7-90 days) and display options
+        4. **Generate**: Click "Generate Forecast" to create predictions
         
-        ### 📊 Available Data Overview:
-        - **🏙️ Cities**: {len(cities)} locations with complete wind data
-        - **📈 Parameters**: {len(wind_params)} wind measurement types  
-        - **📅 Data Period**: {df['date'].min().strftime('%Y-%m-%d')} to {df['date'].max().strftime('%Y-%m-%d')}
-        - **📊 Records**: {len(df):,} daily data points
+        ### Available Data Overview:
+        - **Cities**: {len(cities)} locations with complete wind data
+        - **Parameters**: {len(wind_params)} wind measurement types  
+        - **Data Period**: {df['date'].min().strftime('%Y-%m-%d')} to {df['date'].max().strftime('%Y-%m-%d')}
+        - **Records**: {len(df):,} daily data points
         
-        ### 🎯 Forecasting Features:
+        ### Forecasting Features:
         - **Advanced SARIMA Models**: Statistical time series forecasting
         - **Seasonal Patterns**: Captures annual wind cycle variations
         - **Confidence Intervals**: 95% uncertainty bounds for predictions
@@ -661,7 +661,7 @@ else:
         """)
     
     with col2:
-        st.markdown("### 📈 Data Statistics")
+        st.markdown("### Data Statistics")
         
         st.markdown(f"""
         <div class="forecast-metric">
@@ -694,9 +694,9 @@ else:
         """, unsafe_allow_html=True)
 
 # Technical information section
-with st.expander("ℹ️ About SARIMA Forecasting"):
+with st.expander("About SARIMA Forecasting"):
     st.markdown("""
-    ### 🎯 SARIMA Model Overview
+    ### SARIMA Model Overview
     
     **SARIMA (Seasonal AutoRegressive Integrated Moving Average)** is an advanced statistical method for time series forecasting that combines:
     
@@ -705,21 +705,21 @@ with st.expander("ℹ️ About SARIMA Forecasting"):
     - **Moving Average (MA)**: Uses past forecast errors to improve predictions
     - **Seasonal**: Captures recurring patterns (daily, monthly, yearly cycles)
     
-    ### 📊 Performance Metrics Explained:
+    ###  Performance Metrics Explained:
     
     - **AIC (Akaike Information Criterion)**: Model selection metric (lower = better fit)
     - **MAE (Mean Absolute Error)**: Average prediction error in m/s
     - **MAPE (Mean Absolute Percentage Error)**: Percentage accuracy (< 20% = good)
     - **RMSE (Root Mean Square Error)**: Penalizes larger prediction errors
     
-    ### 🎨 Forecast Components:
+    ###  Forecast Components:
     
     - **Base Trend**: Long-term directional movement in wind patterns
     - **Seasonal Cycles**: Annual variations due to weather patterns
     - **Random Variation**: Unpredictable short-term fluctuations
     - **Confidence Intervals**: 95% probability bounds for predictions
     
-    ### ⚠️ Usage Guidelines:
+    ###  Usage Guidelines:
     
     1. **Optimal Horizon**: Most accurate for 7-30 day forecasts
     2. **Uncertainty Growth**: Confidence intervals widen with longer forecasts
@@ -736,12 +736,12 @@ st.markdown(f"""
             border-radius: 15px; 
             color: white; 
             font-family: Arial, sans-serif;'>
-    <h4 style='color: #f8f9fa; margin-bottom: 1rem;'>🌬️ SARIMA Wind Forecasting Dashboard</h4>
+    <h4 style='color: #f8f9fa; margin-bottom: 1rem;'>SARIMA Wind Forecasting Dashboard</h4>
     <div style='display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;'>
-        <div><strong>📍 Cities:</strong> {len(cities)}</div>
-        <div><strong>📈 Parameters:</strong> {len(wind_params)}</div>
-        <div><strong>📊 Records:</strong> {len(df):,}</div>
-        <div><strong>📅 Years:</strong> {df['date'].dt.year.nunique() if not df.empty else 0}</div>
+        <div><strong> Cities:</strong> {len(cities)}</div>
+        <div><strong> Parameters:</strong> {len(wind_params)}</div>
+        <div><strong> Records:</strong> {len(df):,}</div>
+        <div><strong> Years:</strong> {df['date'].dt.year.nunique() if not df.empty else 0}</div>
     </div>
     <p style='margin-top: 1rem; font-style: italic; opacity: 0.9;'>
         Advanced Statistical Forecasting • Seasonal Pattern Recognition • Built with Streamlit & Plotly
