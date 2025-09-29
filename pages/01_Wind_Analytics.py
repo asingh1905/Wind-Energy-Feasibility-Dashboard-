@@ -1,4 +1,5 @@
-# Wind Analytics Dashboard
+# Wind Analytics Dashboard 
+
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -43,17 +44,34 @@ initialize_session_state()
 # Custom CSS styling (empty for now, add your CSS here if needed)
 st.markdown("""""", unsafe_allow_html=True)
 
-# Load data with improved caching
+# FIXED: Load data with improved caching and date cleaning
 @st.cache_data(ttl=3600, show_spinner=False)
 def load_and_process_data():
     """Load and prepare wind data for analysis."""
     try:
         data = load_wind_data()
         df = data.copy()
-        df['date'] = pd.to_datetime(df['date'])
+        
+        # FIXED: Better date processing with cleaning
+        df['date'] = pd.to_datetime(df['date'], errors='coerce')
+        
+        # Remove rows with invalid dates (NaT)
+        df = df.dropna(subset=['date'])
+        
+        # FIXED: Extract year as integer (not float)
+        df['year'] = df['date'].dt.year.astype('Int64')  # Use nullable integer
+        df['month'] = df['date'].dt.month
         df['month_name'] = df['date'].dt.strftime('%B')
-        df['day_of_year'] = df['date'].dt.dayofyear
-        df['week'] = df['date'].dt.isocalendar().week
+        df['day'] = df['date'].dt.day
+        
+        # FIXED: Better season mapping
+        df['season'] = df['month'].map({
+            12: 'Winter', 1: 'Winter', 2: 'Winter',
+            3: 'Spring', 4: 'Spring', 5: 'Spring',
+            6: 'Summer', 7: 'Summer', 8: 'Summer',
+            9: 'Autumn', 10: 'Autumn', 11: 'Autumn'
+        })
+        
         return df
     except Exception as e:
         st.error(f"Error loading data: {str(e)}")
@@ -63,15 +81,23 @@ def load_and_process_data():
 def get_processed_metadata(df):
     """Get processed metadata from dataframe."""
     if df.empty:
-        return [], [], []
+        return [], [], [], []
     
-    cities = get_location_list(df)
-    years_available = sorted(df['date'].dt.year.unique().tolist())
-    months = ['January', 'February', 'March', 'April', 'May', 'June',
-              'July', 'August', 'September', 'October', 'November', 'December']
-    seasons = ['Spring', 'Summer', 'Autumn', 'Winter']
-    
-    return cities, years_available, months, seasons
+    try:
+        cities = get_location_list(df)
+        
+        # FIXED: Clean years list - remove NaN and convert to int
+        years_raw = df['year'].dropna().unique()
+        years_available = sorted([int(year) for year in years_raw if pd.notna(year) and year > 1900])
+        
+        months = ['January', 'February', 'March', 'April', 'May', 'June',
+                  'July', 'August', 'September', 'October', 'November', 'December']
+        seasons = ['Spring', 'Summer', 'Autumn', 'Winter']
+        
+        return cities, years_available, months, seasons
+    except Exception as e:
+        st.error(f"Error processing metadata: {str(e)}")
+        return [], [], [], []
 
 # Initialize data
 df = load_and_process_data()
@@ -203,6 +229,9 @@ if df.empty or not cities:
     st.error("No wind data available. Please check your data source.")
     st.stop()
 
+# Debug info - remove after fixing
+st.sidebar.info(f"Available years: {len(years_available)} years loaded")
+
 # Sidebar Configuration with unique keys
 with st.sidebar:
     st.title("🌪️ Analytics Configuration")
@@ -279,16 +308,17 @@ with st.sidebar:
         key="time_filter_select"
     )
     
-    # Filter Configuration with error handling
+    # FIXED: Filter Configuration with better error handling
     try:
         if time_filter == "Specific Year" and years_available:
             selected_year = st.selectbox(
                 "Select Year", 
-                years_available, 
+                years_available,  # Now clean integers
                 index=len(years_available)-1,
                 key="year_select"
             )
-            filter_data = df[df['date'].dt.year == selected_year]
+            # FIXED: Use integer comparison, not dt.year
+            filter_data = df[df['year'] == selected_year]
         elif time_filter == "Date Range":
             min_date, max_date = df['date'].min().date(), df['date'].max().date()
             date_range = st.date_input(
@@ -309,7 +339,7 @@ with st.sidebar:
                 seasons,
                 key="season_select"
             )
-            filter_data = df[df['season'] == selected_season] if 'season' in df.columns else df
+            filter_data = df[df['season'] == selected_season]
         elif time_filter == "Monthly" and months:
             selected_month = st.selectbox(
                 "Select Month", 
@@ -717,23 +747,36 @@ with tab5:
     except Exception as e:
         st.error(f"Error in data table: {str(e)}")
 
-# Footer
-    # Footer
+# FIXED: Footer with better error handling
 st.markdown("---")
-st.markdown(
-    f"""
-    <div style='text-align: center; padding: 2rem; 
-                background: linear-gradient(45deg, #222, #444); 
-                border-radius: 15px; 
-                margin-top: 2rem; 
-                color: #eee; 
-                font-family: Arial, sans-serif;'>
-        <h4 style='color: #f9a825;'>Wind Analytics Dashboard</h4>
-        <p><strong>Data Updated:</strong> {str(df['date'].max())[0:10]} | 
-        <strong>Analysis Period:</strong> {df['date'].min().strftime('%Y')} - {df['date'].max().strftime('%Y')} | 
-        <p><em>Powered by NASA POWER Data • Built with Streamlit & Plotly</em></p>
-    </div>
-    """,
-
-    unsafe_allow_html=True
-)
+try:
+    min_year = df['year'].min() if not df.empty else "N/A"
+    max_year = df['year'].max() if not df.empty else "N/A" 
+    max_date = df['date'].max().strftime('%B %d, %Y') if not df.empty else "N/A"
+    
+    st.markdown(
+        f"""
+        <div style='text-align: center; padding: 2rem; 
+                    background: linear-gradient(45deg, #222, #444); 
+                    border-radius: 15px; 
+                    margin-top: 2rem; 
+                    color: #eee; 
+                    font-family: Arial, sans-serif;'>
+            <h4 style='color: #f9a825;'>🌪️ Wind Analytics Dashboard</h4>
+            <p><strong>Data Updated:</strong> {max_date} | 
+            <strong>Analysis Period:</strong> {min_year} - {max_year} | 
+            <strong>Cities:</strong> {len(cities)}</p>
+            <p><em>Powered by NASA POWER Data • Built with Streamlit & Plotly</em></p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+except Exception:
+    st.markdown(
+        """
+        <div style='text-align: center; padding: 1rem; color: #666;'>
+            <p><em>🌪️ Wind Energy Analytics Dashboard</em></p>
+        </div>
+        """, 
+        unsafe_allow_html=True
+    )
