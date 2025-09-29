@@ -718,17 +718,22 @@ with tab5:
         st.error(f"Error in data table: {str(e)}")
 
 # Footer
+    # Footer
 st.markdown("---")
-try:
-    footer_content = f"""
-    <div style='text-align: center; padding: 1rem; background: #f0f2f6; border-radius: 10px; margin-top: 2rem;'>
-        <h4>🌪️ Wind Energy Analytics Dashboard</h4>
-        <p><strong>Data Updated:</strong> {df['date'].max().strftime('%B %d, %Y') if not df.empty else 'N/A'} | 
-        <strong>Analysis Period:</strong> {df['date'].min().strftime('%Y') if not df.empty else 'N/A'} - {df['date'].max().strftime('%Y') if not df.empty else 'N/A'}</p>
+st.markdown(
+    f"""
+    <div style='text-align: center; padding: 2rem; 
+                background: linear-gradient(45deg, #222, #444); 
+                border-radius: 15px; 
+                margin-top: 2rem; 
+                color: #eee; 
+                font-family: Arial, sans-serif;'>
+        <h4 style='color: #f9a825;'>Wind Analytics Dashboard</h4>
+        <p><strong>Data Updated:</strong> {df['date'].max().strftime('%B %d, %Y')} | 
+        <strong>Analysis Period:</strong> {df['date'].min().strftime('%Y')} - {df['date'].max().strftime('%Y')} | 
         <p><em>Powered by NASA POWER Data • Built with Streamlit & Plotly</em></p>
     </div>
-    """
-    st.markdown(footer_content, unsafe_allow_html=True)
-except Exception as e:
-    st.markdown("---")
-    st.markdown("<p style='text-align: center;'><em>Wind Energy Analytics Dashboard</em></p>", unsafe_allow_html=True)
+    """,
+
+    unsafe_allow_html=True
+)
