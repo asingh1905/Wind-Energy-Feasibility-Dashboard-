@@ -16,8 +16,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 # Configure page with enhanced settings
 st.set_page_config(
-    page_title="🌪️ Wind Energy Feasibility Dashboard",
-    page_icon="🌪️",
+    page_title=" Wind Energy Feasibility Dashboard",
     layout="wide",
     initial_sidebar_state="expanded",
     menu_items={

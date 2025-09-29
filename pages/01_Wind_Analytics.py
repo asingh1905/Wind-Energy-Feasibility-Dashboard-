@@ -234,7 +234,7 @@ st.sidebar.info(f"Available years: {len(years_available)} years loaded")
 
 # Sidebar Configuration with unique keys
 with st.sidebar:
-    st.title("🌪️ Analytics Configuration")
+    st.title("Analytics Configuration")
     
     # Analysis Mode
     analysis_mode = st.radio(
@@ -362,7 +362,7 @@ with st.sidebar:
     )
 
 # Main Dashboard
-st.markdown('<h1 style="text-align: center;">🌪️ Wind Energy Analytics Dashboard</h1>', unsafe_allow_html=True)
+st.markdown('<h1 style="text-align: center;">Wind Energy Analytics Dashboard</h1>', unsafe_allow_html=True)
 st.markdown('<h3 style="text-align: center;">Comprehensive Wind Resource Assessment</h3>', unsafe_allow_html=True)
 st.markdown("---")
 
@@ -393,7 +393,7 @@ if city_data.empty:
     st.stop()
 
 # Key Metrics Row
-st.subheader("📊 Key Performance Metrics")
+st.subheader("Key Performance Metrics")
 
 try:
     if analysis_mode == "Single City":
@@ -465,11 +465,11 @@ except Exception as e:
 
 # Main Analysis Tabs
 tab1, tab2, tab3, tab4, tab5 = st.tabs([
-    "📈 Time Series Analysis", 
-    "🎯 Wind Resource Assessment", 
-    "📊 Statistical Analysis", 
-    "🌹 Wind Rose Analysis", 
-    "📋 Data Table"
+    "Time Series Analysis", 
+    "Wind Resource Assessment", 
+    "Statistical Analysis", 
+    "Wind Rose Analysis", 
+    "Data Table"
 ])
 
 with tab1:
@@ -762,7 +762,7 @@ try:
                     margin-top: 2rem; 
                     color: #eee; 
                     font-family: Arial, sans-serif;'>
-            <h4 style='color: #f9a825;'>🌪️ Wind Analytics Dashboard</h4>
+            <h4 style='color: #f9a825;'> Wind Analytics Dashboard</h4>
             <p><strong>Data Updated:</strong> {max_date} | 
             <strong>Analysis Period:</strong> {min_year} - {max_year} | 
             <strong>Cities:</strong> {len(cities)}</p>
@@ -775,7 +775,7 @@ except Exception:
     st.markdown(
         """
         <div style='text-align: center; padding: 1rem; color: #666;'>
-            <p><em>🌪️ Wind Energy Analytics Dashboard</em></p>
+            <p><em> Wind Energy Analytics Dashboard</em></p>
         </div>
         """, 
         unsafe_allow_html=True
