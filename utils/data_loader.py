@@ -6,25 +6,49 @@ import os
 from datetime import datetime, timedelta
 
 @st.cache_data(ttl=3600)
-def load_wind_data(file_path: str = "data/selected_cities/selected_cities_310825.csv") -> pd.DataFrame:
-    """Load and preprocess wind data with caching."""
+def load_wind_data(
+    file_path: str = "data/selected_cities/selected_cities_310825.csv"
+) -> pd.DataFrame:
     try:
         df = pd.read_csv(file_path)
-        
-        # Handle column name variations
-        if 'name' in df.columns and 'location' not in df.columns:
-            df['location'] = df['name']
-            
-        if 'date' not in df.columns:
-            df['date'] = pd.date_range('2014-01-01', periods=len(df), freq='D')
-            
-        df['date'] = pd.to_datetime(df['date'], errors='coerce')
-        df = df.sort_values(['location', 'date']).reset_index(drop=True)
-        return df
-    except Exception as e:
-        st.error(f"Error loading data: {e}")
-        return pd.DataFrame()
 
+        # 1) Always standardise the key columns first
+        if "name" in df.columns and "location" not in df.columns:
+            df["location"] = df["name"]
+
+        # 2) Coerce *everything* to string before parsing
+        if "date" in df.columns:
+            df["date"] = (
+                df["date"].astype(str)                   # force string dtype
+                           .str.strip()                  # remove whitespace
+                           .replace("", pd.NA)           # treat blanks as NaN
+            )
+        else:
+            # if the CSV is missing a date column entirely
+            df["date"] = pd.NA
+
+        # 3) Parse with an explicit day-first format
+        df["date"] = pd.to_datetime(
+            df["date"],
+            format="%d-%m-%Y",
+            errors="coerce",
+            dayfirst=True
+        )
+
+        # 4) Drop rows that are still NaT (optional)
+        bad_rows = df["date"].isna().sum()
+        if bad_rows:
+            print(f"Dropping {bad_rows} rows with unparseable dates")
+            df = df.dropna(subset=["date"])
+
+        # Final clean-up
+        df = df.sort_values(["location", "date"], ascending=[True, True])
+        df = df.reset_index(drop=True)
+        return df
+
+    except Exception as e:
+        print(f"Error loading data: {e}")
+        return pd.DataFrame()
 
 
 def get_location_list(df: pd.DataFrame) -> List[str]:

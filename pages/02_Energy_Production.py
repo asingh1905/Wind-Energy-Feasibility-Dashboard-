@@ -1,4 +1,4 @@
-# Energy Production Dashboard - Final Optimized Version
+# Energy Production Dashboard
 
 import streamlit as st
 import pandas as pd
