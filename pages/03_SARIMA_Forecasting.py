@@ -632,7 +632,7 @@ if st.session_state.get('forecast_generated', False) and st.session_state.curren
 
 else:
     # Getting started information
-    st.subheader("🚀 Getting Started with Wind Forecasting")
+    st.subheader("Getting Started with Wind Forecasting")
     
     col1, col2 = st.columns([2, 1])
     
