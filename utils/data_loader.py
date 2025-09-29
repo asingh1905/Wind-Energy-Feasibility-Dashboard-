@@ -5,7 +5,7 @@ from typing import Dict, List, Optional, Tuple
 import os
 from datetime import datetime, timedelta
 @st.cache_data(ttl=3600)
-def load_wind_data(file_path: str = "data/selected_cities/selected_cities_complete_wind_data.csv") -> pd.DataFrame:
+def load_wind_data(file_path: str = "data\selected_cities\selected_cities_310825.csv") -> pd.DataFrame:
     """Load and preprocess wind data with caching."""
     try:
         df = pd.read_csv(file_path)

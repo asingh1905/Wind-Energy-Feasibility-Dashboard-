@@ -15,3 +15,5 @@ not required
 data/extra files
 data/complete csv data
 nasa_power_ultra_fast.py
+data/processed
+wind_energy_extractor_aligned.py

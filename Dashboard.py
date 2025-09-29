@@ -8,6 +8,8 @@ from datetime import datetime, timedelta
 import sys
 import os
 from typing import Dict, List, Tuple, Any
+from utils.data_loader import load_wind_data
+
 
 # Add utils to path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -86,38 +88,6 @@ st.markdown("""
     }
 </style>
 """, unsafe_allow_html=True)
-
-@st.cache_data
-def load_dashboard_data():
-    """Load and prepare comprehensive dashboard data."""
-    try:
-        from utils.data_loader import load_wind_data, get_location_list
-        df = load_wind_data()
-        df['date'] = pd.to_datetime(df['date'])
-        
-        # Add derived columns for enhanced analytics
-        df['month_name'] = df['date'].dt.strftime('%B')
-        df['day_of_year'] = df['date'].dt.dayofyear
-        df['is_weekend'] = df['date'].dt.weekday >= 5
-        df['quarter'] = df['date'].dt.quarter
-        
-        # Calculate additional metrics
-        df['wind_variability_10m'] = df.groupby('location')['wind_speed_10m'].transform(
-            lambda x: x.rolling(window=30, center=True).std()
-        )
-        
-        # Energy potential classification
-        df['energy_potential'] = pd.cut(
-            df['wind_speed_10m'], 
-            bins=[0, 3, 5, 7, 10, float('inf')], 
-            labels=['Poor', 'Marginal', 'Moderate', 'Good', 'Excellent']
-        )
-        
-        return df
-        
-    except Exception as e:
-        st.error(f"Error loading data: {str(e)}")
-        return pd.DataFrame()
 
 def create_top_cities_chart(df: pd.DataFrame, metric: str = 'wind_speed_10m', top_n: int = 10):
     """Create top cities ranking chart."""
@@ -331,7 +301,7 @@ def main():
     
     # Load data
     with st.spinner(" Loading comprehensive wind data..."):
-        df = load_dashboard_data()
+        df = load_wind_data()
     
     if df.empty:
         st.error(" Unable to load wind data. Please check your data files and try again.")
@@ -343,7 +313,7 @@ def main():
     # Key Performance Indicators
     st.markdown("##  **Key Performance Dashboard**")
     
-    col1, col2, col3, col4, col5 = st.columns(5)
+    col1, col2, col3, col4= st.columns(4)
     
     with col1:
         st.markdown(
@@ -365,17 +335,8 @@ def main():
             unsafe_allow_html=True
         )
     
-    with col3:
-        st.markdown(
-            f"""<div class="metric-card">
-                <h3>⚡ Est. Capacity Factor</h3>
-                <h2>{insights['avg_capacity_factor']:.1f}%</h2>
-                <p>Energy Production</p>
-            </div>""", 
-            unsafe_allow_html=True
-        )
     
-    with col4:
+    with col3:
         st.markdown(
             f"""<div class="metric-card">
                 <h3> Data Points</h3>
@@ -385,7 +346,7 @@ def main():
             unsafe_allow_html=True
         )
     
-    with col5:
+    with col4:
         st.markdown(
             f"""<div class="metric-card">
                 <h3> Excellent Sites</h3>
@@ -406,8 +367,7 @@ def main():
             f"""<div class="insight-card">
                 <h4> Top Performing Location</h4>
                 <p><strong>{insights['best_city']['name']}</strong> leads with an average wind speed of 
-                <strong>{insights['best_city']['wind_speed']:.2f} m/s</strong> and 
-                <strong>{insights['best_city']['operational_rate']:.1f}%</strong> turbine operational rate.</p>
+                <strong>{insights['best_city']['wind_speed']:.2f} m/s.</strong> 
             </div>""", 
             unsafe_allow_html=True
         )
