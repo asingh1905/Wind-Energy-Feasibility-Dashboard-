@@ -729,7 +729,7 @@ st.markdown(
                 color: #eee; 
                 font-family: Arial, sans-serif;'>
         <h4 style='color: #f9a825;'>Wind Analytics Dashboard</h4>
-        <p><strong>Data Updated:</strong> {df['date'].max().strftime('%B %d, %Y')} | 
+        <p><strong>Data Updated:</strong> {str(df['date'].max())[0:10]} | 
         <strong>Analysis Period:</strong> {df['date'].min().strftime('%Y')} - {df['date'].max().strftime('%Y')} | 
         <p><em>Powered by NASA POWER Data • Built with Streamlit & Plotly</em></p>
     </div>
