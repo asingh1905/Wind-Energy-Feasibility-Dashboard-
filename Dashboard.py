@@ -487,25 +487,7 @@ def main():
             </div>""", 
             unsafe_allow_html=True
         )
-    
-    # Quick Navigation
-    st.markdown("---")
-    st.markdown("## **Quick Navigation**")
-    
-    col1, col2, col3= st.columns(3)
-    
-    with col1:
-        if st.button("Wind Analytics", use_container_width=True):
-            st.switch_page("pages/01_Wind_Analytics.py")
-    
-    with col2:
-        if st.button("Energy Production", use_container_width=True):
-            st.switch_page("pages/02_Energy_Production.py")
-    
-    with col3:
-        if st.button("SARIMA Forecasting", use_container_width=True):
-            st.switch_page("pages/03_SARIMA_Forecasting.py")
-    
+  
     # Data Quality & Methodology
     st.markdown("---")
     st.markdown("## **Data & Methodology**")
