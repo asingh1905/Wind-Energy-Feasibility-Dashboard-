@@ -4,8 +4,9 @@ import streamlit as st
 from typing import Dict, List, Optional, Tuple
 import os
 from datetime import datetime, timedelta
+
 @st.cache_data(ttl=3600)
-def load_wind_data(file_path: str = "data\selected_cities\selected_cities_310825.csv") -> pd.DataFrame:
+def load_wind_data(file_path: str = "data/selected_cities/selected_cities_310825.csv") -> pd.DataFrame:
     """Load and preprocess wind data with caching."""
     try:
         df = pd.read_csv(file_path)
@@ -23,6 +24,7 @@ def load_wind_data(file_path: str = "data\selected_cities\selected_cities_310825
     except Exception as e:
         st.error(f"Error loading data: {e}")
         return pd.DataFrame()
+
 
 
 def get_location_list(df: pd.DataFrame) -> List[str]:
